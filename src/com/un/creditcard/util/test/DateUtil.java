@@ -1,4 +1,4 @@
-package com.un.creditcard.util;
+package com.un.creditcard.util.test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

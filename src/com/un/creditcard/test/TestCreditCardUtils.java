@@ -10,26 +10,28 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.un.creditcard.util.DateUtil;
+import com.un.creditcard.pojo.Transaction;
 import com.un.creditcard.util.TransactionUtil;
+import com.un.creditcard.util.test.DateUtil;
 
 public class TestCreditCardUtils {
 
 	@Test
 	public void checkTransactionsListNotNullOrEmpty() {
-		assertNotNull( TransactionUtil.getTransactions());
+		assertNotNull( TransactionUtil.getTransactionsFromFile());
 		
-		assertTrue(TransactionUtil.getTransactions().size() > 0); 
+		assertTrue(TransactionUtil.getTransactionsFromFile().size() > 0); 
 	}
 	
 	@Test
-	public void checkTransactionStringSizeIsThree(){
+	public void checkTransactionDetailsNotNull(){
 		
-		String[] transactionDetails = null;
-		List<String> transactions = TransactionUtil.getTransactions();
-		for (String tranaction : transactions) {
-			transactionDetails = tranaction.split(",");				
-			assertTrue(transactionDetails.length == 3);
+		
+		List<Transaction> transactions = TransactionUtil.getTransactionsFromFile();
+		for (Transaction tranaction : transactions) {
+			assertNotNull(tranaction.getCredirCardNum());			
+			assertNotNull(tranaction.getPaymentDone());	
+			assertNotNull(tranaction.getPrice());	
 		}
 	}
 	

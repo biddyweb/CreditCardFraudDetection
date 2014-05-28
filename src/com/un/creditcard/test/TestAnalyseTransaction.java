@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.un.creditcard.pojo.Transaction;
 import com.un.creditcard.service.AnalyseTransaction;
 import com.un.creditcard.util.TransactionUtil;
 
@@ -17,14 +18,14 @@ public class TestAnalyseTransaction {
 	
 	String checkForDay = null;
 	Double thresholdPrice = null;
-	List<String> transactionList = null;
+	List<Transaction> transactionList = null;
 	
 	@Before
 	public void setUp() throws Exception{
-		 checkForDay = "2014-05-23";
+		 checkForDay = "2014-05-28";
 		 thresholdPrice = new Double(1000.00);
 		 
-		 transactionList = TransactionUtil.getTransactions();
+		 transactionList = TransactionUtil.getTransactionsFromFile();
 	}
 	
 	@After

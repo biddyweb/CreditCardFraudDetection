@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.un.creditcard.pojo.Transaction;
+
 public class AnalyseTransaction {
 
 	private final static Logger LOGGER = Logger.getLogger(AnalyseTransaction.class.getName());
@@ -21,7 +23,7 @@ public class AnalyseTransaction {
 	 * @param priceThreshold max transaction amount for a day
 	 * @return List<String> of hashed credit card numbers which exceeded the daily transaction threshold limit; or null if no records found
 	 */
-	public static List<String> checkTranasctionsForGivenDay(List<String> transactions, String checkDate, Double priceThreshold) {
+	public static List<String> checkTranasctionsForGivenDay(List<Transaction> transactions, String checkDate, Double priceThreshold) {
 
 		Map<String, Double> transactionTotalPerCard = returnAllTransactiondForGivenDate(transactions, checkDate);
 
@@ -41,17 +43,17 @@ public class AnalyseTransaction {
 	 */
 	private static List<String> applyPriceThreshold(Map<String, Double> transactionTotalPerCard, Double priceThreshold) {
 		
-		List<String> detectedAsFraud = new ArrayList<String>();
+		List<String> fraudDetectedList = new ArrayList<String>();
 
 		for (Map.Entry<String, Double> entry : transactionTotalPerCard.entrySet()) {
 			//check if total amount exceed threshold amount
 			if (entry.getValue().compareTo(priceThreshold) >= 0) {
-				LOGGER.log(Level.INFO, "Fraud detected for card # -" + entry.getKey() + " , tomal amount is  " + entry.getValue());
-				detectedAsFraud.add(entry.getKey());
+				//LOGGER.log(Level.INFO, "Fraud detected for card # -" + entry.getKey() + " , tomal amount is  " + entry.getValue());
+				fraudDetectedList.add(entry.getKey());
 			}
 		}
 
-		return detectedAsFraud;
+		return fraudDetectedList;
 	}
 
 	/**
@@ -60,45 +62,38 @@ public class AnalyseTransaction {
 	 * @param checknDate check transactions for the particular date
 	 * @return Map<String, Double>
 	 */
-	private static Map<String, Double> returnAllTransactiondForGivenDate( List<String> transactions, String checkDate) {
+	private static Map<String, Double> returnAllTransactiondForGivenDate( List<Transaction> transactions, String checkDate) {
 
 		boolean atleastOneMatchedTransaction = false;
 		String creditCardNumber = null;
 		String paymententDate = null;
 		Double paymentAmount = null;
-		String[] transactionDetails = null;
 		Date checkForDate, tranactionDay;
 		Map<String, Double> transactionTotalPerCard = new HashMap<String, Double>();
 
-		for (String tranaction : transactions) {
-			LOGGER.log(Level.INFO, tranaction);
+		for (Transaction tranaction : transactions) {
+			//LOGGER.log(Level.INFO, tranaction.toString());
 
-			transactionDetails = tranaction.split(",");			
-			
-			if (transactionDetails != null && transactionDetails.length == 3) {
-				//assuming the split string will always have 3 items
-				creditCardNumber = transactionDetails[0];
-				paymententDate = transactionDetails[1];
-				paymentAmount = Double.valueOf(transactionDetails[2]);
+			// assuming the split string will always have 3 items
+			creditCardNumber = tranaction.getCredirCardNum();
+			paymententDate = tranaction.getPaymentDone();
+			paymentAmount = tranaction.getPrice();
 
-				try {
-					checkForDate = new SimpleDateFormat("yyyy-MM-dd").parse(checkDate);					
-					tranactionDay = new SimpleDateFormat("yyyy-MM-dd").parse(paymententDate);
+			try {
+				checkForDate = new SimpleDateFormat("yyyy-MM-dd").parse(checkDate);
+				tranactionDay = new SimpleDateFormat("yyyy-MM-dd").parse(paymententDate);
 
-					if (tranactionDay.equals(checkForDate)){ 
-						LOGGER.log(Level.INFO, "transaction date matched.. proceed with verification");
+				if (tranactionDay.equals(checkForDate)) {
+					//LOGGER.log(Level.INFO,	"transaction date matched.. proceed with verification");
 
-						atleastOneMatchedTransaction = true;
-						
-						// keep adding amount if credit card number exists in Map
-						Double existingValue = transactionTotalPerCard.get(creditCardNumber);
-						transactionTotalPerCard.put(creditCardNumber, existingValue == null ? paymentAmount	: existingValue + paymentAmount);
-					}
-				} catch (ParseException e) {
-					LOGGER.log(Level.SEVERE, e.toString(), e);
+					atleastOneMatchedTransaction = true;
+
+					// keep adding amount if credit card number exists in Map
+					Double existingValue = transactionTotalPerCard.get(creditCardNumber);
+					transactionTotalPerCard.put(creditCardNumber, existingValue == null ? paymentAmount : existingValue + paymentAmount);
 				}
-			}else{
-				LOGGER.log(Level.SEVERE, "Transaction record not in given format");
+			} catch (ParseException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
 		}
 		

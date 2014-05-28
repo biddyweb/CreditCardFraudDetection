@@ -11,9 +11,9 @@ public class Transaction {
 	
 	public Transaction(){};
 	
-	public Transaction(String credirCardNum, Date paymentDone, Double price){
+	public Transaction(String credirCardNum, String paymentDone, Double price){
 		this.credirCardNum =  credirCardNum;
-		this.paymentDone = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(paymentDone);		
+		this.paymentDone = paymentDone;		
 		this.price = price;
 	}
 
@@ -44,7 +44,7 @@ public class Transaction {
 	@Override
 	public String toString() {
 		
-		return credirCardNum.hashCode()+ "," +
+		return credirCardNum + "," +
 				paymentDone.toString() + "," +
 				price.toString();
 	}
