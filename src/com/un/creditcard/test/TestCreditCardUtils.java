@@ -11,23 +11,26 @@ import java.util.List;
 import org.junit.Test;
 
 import com.un.creditcard.pojo.Transaction;
-import com.un.creditcard.util.TransactionUtil;
+import com.un.creditcard.util.TransactionListFactory;
 import com.un.creditcard.util.test.DateUtil;
 
-public class TestCreditCardUtils {
+public class TestCreditCardUtils {	
+
+	private TransactionListFactory transactionListFactory;
 
 	@Test
 	public void checkTransactionsListNotNullOrEmpty() {
-		assertNotNull( TransactionUtil.getTransactionsFromFile());
+		transactionListFactory = new TransactionListFactory();
 		
-		assertTrue(TransactionUtil.getTransactionsFromFile().size() > 0); 
+		assertNotNull( transactionListFactory.populateTransactions("CSV"));		
+		assertTrue(transactionListFactory.populateTransactions("CSV").size() > 0); 
 	}
 	
 	@Test
 	public void checkTransactionDetailsNotNull(){
+		transactionListFactory = new TransactionListFactory();
 		
-		
-		List<Transaction> transactions = TransactionUtil.getTransactionsFromFile();
+		List<Transaction> transactions = transactionListFactory.populateTransactions("CSV");
 		for (Transaction tranaction : transactions) {
 			assertNotNull(tranaction.getCredirCardNum());			
 			assertNotNull(tranaction.getPaymentDone());	
@@ -57,9 +60,12 @@ public class TestCreditCardUtils {
 	@Test
 	public void checkNextDayIsCorrect() {
 		Date date = DateUtil.getNextDay(DateUtil.createDateFromString("2014-05-22"));
-		assertEquals("2014-05-23",  new SimpleDateFormat("yyyy-MM-dd").format(date));
+		assertEquals("2014-05-23",  new SimpleDateFormat("yyyy-MM-dd").format(date));		
 	}
 	
-	
+	@Test
+	public void test1() throws Exception {
+		
+	}
 
 }

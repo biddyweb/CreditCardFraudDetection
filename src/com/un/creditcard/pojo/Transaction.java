@@ -1,7 +1,5 @@
 package com.un.creditcard.pojo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Transaction {
 	

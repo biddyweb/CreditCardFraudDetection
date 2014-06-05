@@ -2,18 +2,20 @@ package com.un.creditcard.main;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 import com.un.creditcard.pojo.Transaction;
-import com.un.creditcard.service.AnalyseTransaction;
-import com.un.creditcard.util.TransactionUtil;
+import com.un.creditcard.service.CreditCardTransactionAnalyser;
+import com.un.creditcard.service.TransactionAnalyser;
+import com.un.creditcard.util.TransactionListFactory;
 
 public class StartFraudDetection {
 
 	private static final String CHECK_FOR_DAY = "2014-01-30";
 	private static final Double THRESHOLD_PRICE = new Double(1000.00);
+	private static TransactionListFactory transactionListFactory;
+	private static TransactionAnalyser analyseTransaction;
 
 	public static void main(String[] args) {
 
@@ -46,9 +48,12 @@ public class StartFraudDetection {
 			thresholdPrice = scanner.next();
 
 			try {
-				List<Transaction> transactionList = TransactionUtil.getTransactionsFromFile();
+				transactionListFactory = new TransactionListFactory();
+				
+				List<Transaction> transactionList = transactionListFactory.populateTransactions("CSV");
 				if (transactionList != null) {
-					fraudTransactionCardList = AnalyseTransaction.checkTranasctionsForGivenDay(	transactionList,
+					analyseTransaction = new CreditCardTransactionAnalyser();
+					fraudTransactionCardList = analyseTransaction.analyse( transactionList,
 									checkDay != null ? checkDay : CHECK_FOR_DAY, thresholdPrice != null ? Double.valueOf(thresholdPrice) : THRESHOLD_PRICE);
 
 					if (fraudTransactionCardList != null && fraudTransactionCardList.size() > 0) {
@@ -63,7 +68,7 @@ public class StartFraudDetection {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("please enter Exit to terminate the system, or enter a date(yyyy-mm-dd) to continue");
+			System.out.println("please enter 'Exit' to terminate the system, or enter a date(yyyy-mm-dd) to continue");
 		}
 
 	}

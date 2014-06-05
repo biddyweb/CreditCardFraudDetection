@@ -12,9 +12,14 @@ import java.util.logging.Logger;
 
 import com.un.creditcard.pojo.Transaction;
 
-public class AnalyseTransaction {
+public class CreditCardTransactionAnalyser implements TransactionAnalyser {
 
-	private final static Logger LOGGER = Logger.getLogger(AnalyseTransaction.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(CreditCardTransactionAnalyser.class.getName());
+	
+	@Override
+	public List<String> analyse(List<Transaction> transactions, String checkDate, Double priceThreshold) {
+		return CreditCardTransactionAnalyser.checkTranasctionsForGivenDay(transactions, checkDate, priceThreshold);
+	}
 
 	/**
 	 * Check a list of transactions to identify if any fraud activities were done on a given day
@@ -103,5 +108,7 @@ public class AnalyseTransaction {
 
 		return transactionTotalPerCard;
 	}
+
+	
 
 }
