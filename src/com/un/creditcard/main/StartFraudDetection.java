@@ -52,9 +52,9 @@ public class StartFraudDetection {
 				
 				List<Transaction> transactionList = transactionListFactory.populateTransactions("CSV");
 				if (transactionList != null) {
-					analyseTransaction = new CreditCardTransactionAnalyser();
-					fraudTransactionCardList = analyseTransaction.analyse( transactionList,
-									checkDay != null ? checkDay : CHECK_FOR_DAY, thresholdPrice != null ? Double.valueOf(thresholdPrice) : THRESHOLD_PRICE);
+					analyseTransaction = new CreditCardTransactionAnalyser(checkDay != null ? checkDay : CHECK_FOR_DAY, 
+							thresholdPrice != null ? Double.valueOf(thresholdPrice) : THRESHOLD_PRICE);
+					fraudTransactionCardList = analyseTransaction.analyse( transactionList	);
 
 					if (fraudTransactionCardList != null && fraudTransactionCardList.size() > 0) {
 						System.out.println("Fraud transactions detected from the following CreditCards for " + checkDay);

@@ -6,6 +6,6 @@ import com.un.creditcard.pojo.Transaction;
 
 public interface TransactionAnalyser {
 	
-	public List<String> analyse(List<Transaction> transactions, String checkDate, Double priceThreshold);
+	public List<String> analyse(List<Transaction> transactions);
 
 }

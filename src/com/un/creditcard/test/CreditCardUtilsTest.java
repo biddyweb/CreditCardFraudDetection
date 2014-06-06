@@ -14,7 +14,7 @@ import com.un.creditcard.pojo.Transaction;
 import com.un.creditcard.util.TransactionListFactory;
 import com.un.creditcard.util.test.DateUtil;
 
-public class TestCreditCardUtils {	
+public class CreditCardUtilsTest {	
 
 	private TransactionListFactory transactionListFactory;
 

@@ -13,11 +13,19 @@ import java.util.logging.Logger;
 import com.un.creditcard.pojo.Transaction;
 
 public class CreditCardTransactionAnalyser implements TransactionAnalyser {
+	
+	private String checkDate;
+	private Double priceThreshold;
 
 	private final static Logger LOGGER = Logger.getLogger(CreditCardTransactionAnalyser.class.getName());
 	
+	public CreditCardTransactionAnalyser(String checkDate, Double priceThreshold){
+		this.checkDate = checkDate;
+		this.priceThreshold = priceThreshold;
+	}
+	
 	@Override
-	public List<String> analyse(List<Transaction> transactions, String checkDate, Double priceThreshold) {
+	public List<String> analyse(List<Transaction> transactions) {
 		return CreditCardTransactionAnalyser.checkTranasctionsForGivenDay(transactions, checkDate, priceThreshold);
 	}
 
